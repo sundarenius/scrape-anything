@@ -130,14 +130,14 @@ const scrape = async (config) => {
     // I have no solution at moment for cloudflare, but for captchas we can use 2captchas
     // Let's make it simple and focus on sites with no anti bot verifications.
 
-    if (eventType === 'click') {
+    if (eventType === eventTypes.CLICK) {
       const selector = await getSelectorByText(page, textTarget, eventType);
       await click(page, selector);
       await delay(1500); // wait extra when click
-    } else if (eventType === 'input') {
+    } else if (eventType === eventTypes.INPUT) {
       const selector = await getSelectorByText(page, textTarget, eventType);
       await input(page, selector, value);
-    } else if (eventType === 'select') {
+    } else if (eventType === eventTypes.SELECT) {
       console.log('eventType');
       console.log(eventType);
       console.log(value);
@@ -151,54 +151,56 @@ const scrape = async (config) => {
 }
 
 const eventTypes = {
-  // define events here.  
+  CLICK: 'click',
+  INPUT: 'input',
+  SELECT: 'select',
 }
 
 const instagramSignUp = {
   url: 'https://www.instagram.com/accounts/emailsignup/',
   events: [
     {
-      type: 'click',
+      type: eventTypes.CLICK,
       textTarget: 'Allow all cookies',
     },
     {
-      type: 'input',
+      type: eventTypes.INPUT,
       textTarget: 'Mobile number or email address',
       value: 'janne.jan12329_hej@mail.com'
     },
     {
-      type: 'input',
+      type: eventTypes.INPUT,
       textTarget: 'Full Name',
       value: 'Janne Jansson'
     },
     {
-      type: 'input',
+      type: eventTypes.INPUT,
       textTarget: 'Username',
       value: 'Janne.Jansson.0999_jannie'
     },
     {
-      type: 'input',
+      type: eventTypes.INPUT,
       textTarget: 'Password',
       value: 'hejsan'
     },
     {
-      type: 'click',
+      type: eventTypes.CLICK,
       textTarget: 'Next',
     },
     {
-      type: 'select',
+      type: eventTypes.SELECT,
       value: 'August'
     },
     {
-      type: 'select',
+      type: eventTypes.SELECT,
       value: '1'
     },
     {
-      type: 'select',
+      type: eventTypes.SELECT,
       value: '2000'
     },
     {
-      type: 'click',
+      type: eventTypes.CLICK,
       textTarget: 'Next',
     },
   ],
