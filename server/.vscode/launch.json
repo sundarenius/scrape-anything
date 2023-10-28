@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug connect-platform node server",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "dev:debug"
+      ],
+      "restart": true,
+      "skipFiles": [
+        "<node_internals>/**/*.js"
+      ],
+      "sourceMaps": true,
+      "outFiles": []
+    }
+  ]
+}
