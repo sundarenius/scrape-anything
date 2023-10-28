@@ -1,6 +1,7 @@
 import puppeteer from 'puppeteer';
+import { generateRandomFullName } from './names';
 
-const initBrowser = async (url) => {
+const initBrowser = async (url: any) => {
   const puppeteerOptions = {
     devtools: true, // false for headless
     args: [
@@ -22,13 +23,14 @@ const initBrowser = async (url) => {
   };
 };
 
-const getSelectorByText = async (page, targetText, eventType, value) => {
-  const result = await page.evaluate(({ targetText, eventType, value }) => {
-    const start = (targetText) => {
-      const getCssSelector = (el) => {
-        let path = [], parent;
+const getSelectorByText = async (page: any, targetText: any, eventType: any, value: any) => {
+  const result = await page.evaluate(({ targetText, eventType, value }: any) => {
+    const start = (targetText: any) => {
+      const getCssSelector = (el: any) => {
+        let path: any = [];
+        let parent: any = null;
         while (parent = el.parentNode) {
-          path.unshift(`${el.tagName}:nth-child(${[].indexOf.call(parent.children, el)+1})`);
+          path.unshift(`${el.tagName}:nth-child(${[].indexOf.call(parent.children, el as never)+1})`);
           el = parent;
         }
         return `${path.join(' > ')}`.toLowerCase();
@@ -36,9 +38,9 @@ const getSelectorByText = async (page, targetText, eventType, value) => {
       
       const elements = document.getElementsByTagName('*');
       for (let i = 0; i < elements.length; i++) {
-          const element = elements[i];
+          const element: any = elements[i];
 
-          const getIsElMatch = (el, _targetText) => {
+          const getIsElMatch = (el: any, _targetText: any) => {
             // const elValue = el.value;
             const elPlaceholder = el.placeholder;
             const elAriaLabel = el.getAttribute('aria-label');
@@ -70,14 +72,14 @@ const getSelectorByText = async (page, targetText, eventType, value) => {
           if (eventType === 'select') {
             const optionParents = document.querySelectorAll('select');
             for (let k = 0; k < optionParents.length; k++) {
-              const selectParent = optionParents[k];
+              const selectParent: any = optionParents[k];
               const options = selectParent.querySelectorAll('option');
               for (let j = 0; j < options.length; j++) {
                 const option = options[j];
                 const elMatch = getIsElMatch(option, value);
                 if (elMatch) {
                   selectParent.style.color = 'red';
-                  return getCssSelector(selectParent);
+                  return getCssSelector(selectParent as any);
                 }
               }
             }
@@ -103,19 +105,25 @@ const getSelectorByText = async (page, targetText, eventType, value) => {
   return result;
 }
 
-const input = async (page, selector, text) => {
+const input = async (page: any, selector: any, text: any) => {
   await page.type(selector, text, {delay: 50});
 };
 
-const select = async (page, selector, text) => {
+const select = async (page: any, selector: any, text: any) => {
   await page.select(selector, text);
 };
 
-const click = async (page, selector) => {
+const click = async (page: any, selector: any) => {
   await page.click(selector);
 };
 
-const scrape = async (config) => {
+const identifyAndSolveCaptcha = async (page: any) => {
+  return null;
+}
+
+const scrape = async (config: any) => {
+  console.log('config.url:');
+  console.log(config.url);
   const { browser, page } = await initBrowser(config.url);
   await page.waitForSelector('body');
 
@@ -129,13 +137,14 @@ const scrape = async (config) => {
     // Check for captchas and clouflare verifications and solve first if they exist
     // I have no solution at moment for cloudflare, but for captchas we can use 2captchas
     // Let's make it simple and focus on sites with no anti bot verifications.
+    await identifyAndSolveCaptcha(page);
 
     if (eventType === eventTypes.CLICK) {
-      const selector = await getSelectorByText(page, textTarget, eventType);
+      const selector = await getSelectorByText(page, textTarget, eventType, null);
       await click(page, selector);
       await delay(1500); // wait extra when click
     } else if (eventType === eventTypes.INPUT) {
-      const selector = await getSelectorByText(page, textTarget, eventType);
+      const selector = await getSelectorByText(page, textTarget, eventType, null);
       await input(page, selector, value);
     } else if (eventType === eventTypes.SELECT) {
       console.log('eventType');
@@ -156,54 +165,68 @@ const eventTypes = {
   SELECT: 'select',
 }
 
-const instagramSignUp = {
-  url: 'https://www.instagram.com/accounts/emailsignup/',
-  events: [
-    {
-      type: eventTypes.CLICK,
-      textTarget: 'Allow all cookies',
-    },
-    {
-      type: eventTypes.INPUT,
-      textTarget: 'Mobile number or email address',
-      value: 'janne.jan12329_hej@mail.com'
-    },
-    {
-      type: eventTypes.INPUT,
-      textTarget: 'Full Name',
-      value: 'Janne Jansson'
-    },
-    {
-      type: eventTypes.INPUT,
-      textTarget: 'Username',
-      value: 'Janne.Jansson.0999_jannie'
-    },
-    {
-      type: eventTypes.INPUT,
-      textTarget: 'Password',
-      value: 'hejsan'
-    },
-    {
-      type: eventTypes.CLICK,
-      textTarget: 'Next',
-    },
-    {
-      type: eventTypes.SELECT,
-      value: 'August'
-    },
-    {
-      type: eventTypes.SELECT,
-      value: '1'
-    },
-    {
-      type: eventTypes.SELECT,
-      value: '2000'
-    },
-    {
-      type: eventTypes.CLICK,
-      textTarget: 'Next',
-    },
-  ],
+const generateFullName = () => {
+  return 'Janne Jansson';
+};
+
+const generateUserName = () => {
+  return 'Janne.Jansson.0999_jannie';
+};
+
+const getMail = async (name: string) => {
+  // get domain mail from temp API
+  return `${name.split(' ').join('.')}@mail.com`;
+};
+
+const instagramSignUp = async ({ mail, name }: any) => {
+  return {
+    url: 'https://www.instagram.com/accounts/emailsignup/',
+    events: [
+      {
+        type: eventTypes.CLICK,
+        textTarget: 'Allow all cookies',
+      },
+      {
+        type: eventTypes.INPUT,
+        textTarget: 'Mobile number or email address',
+        value: mail,
+      },
+      {
+        type: eventTypes.INPUT,
+        textTarget: 'Full Name',
+        value: name,
+      },
+      {
+        type: eventTypes.CLICK,
+        textTarget: 'Refresh Suggestion',
+      },
+      {
+        type: eventTypes.INPUT,
+        textTarget: 'Password',
+        value: 'hejsan'
+      },
+      {
+        type: eventTypes.CLICK,
+        textTarget: 'Next',
+      },
+      {
+        type: eventTypes.SELECT,
+        value: 'August'
+      },
+      {
+        type: eventTypes.SELECT,
+        value: '1'
+      },
+      {
+        type: eventTypes.SELECT,
+        value: '2000'
+      },
+      {
+        type: eventTypes.CLICK,
+        textTarget: 'Next',
+      },
+    ],
+  };
 }
 
 const tempMail = {
@@ -211,15 +234,20 @@ const tempMail = {
   events: [],
 }
 
-const sas = {
-  url: 'https://www.sas.se/',
-  events: [],
-}
-
-const delay = (time) => {
+const delay = (time: number) => {
   return new Promise(function(resolve) { 
       setTimeout(resolve, time)
   });
 }
 
-scrape(sas);
+const start = async () => {
+  const name = generateRandomFullName();
+  const mail = await getMail(name);
+  const config = await instagramSignUp({
+    name,
+    mail
+  });
+  scrape(config);
+}
+
+start();
