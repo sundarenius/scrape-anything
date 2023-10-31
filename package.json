@@ -10,7 +10,7 @@
     "dist"
   ],
   "scripts": {
-    "run:scrape": "ts-node ./src/create-ig-accounts/scrape-anything.ts",
+    "run:scrape": "ts-node ./src/crawler/scrape-anything.ts",
     "dev:debug": "APP_NAME=instagram_creator NODE_ENV=development ts-node ./src/bin/www.ts",
     "dev": "APP_NAME=instagram_creator NODE_ENV=development tsc-watch --onSuccess \"node dist/src/bin/www.js\"",
     "build": "tsc",

@@ -16,6 +16,22 @@
       ],
       "sourceMaps": true,
       "outFiles": []
+    },
+    {
+      "name": "Debug crawler",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "runtimeExecutable": "yarn",
+      "runtimeArgs": [
+        "run:scrape"
+      ],
+      "restart": true,
+      "skipFiles": [
+        "<node_internals>/**/*.js"
+      ],
+      "sourceMaps": true,
+      "outFiles": []
     }
   ]
 }

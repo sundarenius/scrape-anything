@@ -1,5 +1,5 @@
 import puppeteer from 'puppeteer';
-import { generateRandomFullName } from './names';
+import getConfig from './message-all-ig-followers';
 
 const initBrowser = async (url: any) => {
   const puppeteerOptions = {
@@ -139,99 +139,49 @@ const scrape = async (config: any) => {
     // Let's make it simple and focus on sites with no anti bot verifications.
     await identifyAndSolveCaptcha(page);
 
+    if (event.waitForNavigation) {
+        await page.waitForNavigation({waitUntil: 'networkidle2'})
+    }
+
     if (eventType === eventTypes.CLICK) {
       const selector = await getSelectorByText(page, textTarget, eventType, null);
-      await click(page, selector);
-      await delay(1500); // wait extra when click
+      if (selector) {
+        await click(page, selector);
+        await delay(1500); // wait extra when click
+      }
     } else if (eventType === eventTypes.INPUT) {
       const selector = await getSelectorByText(page, textTarget, eventType, null);
-      await input(page, selector, value);
+      if (selector) {
+        await input(page, selector, value);
+      }
     } else if (eventType === eventTypes.SELECT) {
       console.log('eventType');
       console.log(eventType);
       console.log(value);
       const selector = await getSelectorByText(page, null, eventType, value);
-      await select(page, selector, value);
+      if (selector) {
+        await select(page, selector, value);
+      }
+    } else if (eventType === eventTypes.NAVIGATION) {
+      await page.goto(event.goto);
+      await page.waitForNavigation({waitUntil: 'networkidle2'})
+    } else if (eventType === eventTypes.EVALUATE) {
+      await page.evaluate(event.evaluateCallback);
     }
   }
   
   // Close the browser
-  await browser.close();
+  if (!config.browserStayOpen) {
+    await browser.close();
+  }
 }
 
-const eventTypes = {
+export const eventTypes = {
   CLICK: 'click',
   INPUT: 'input',
   SELECT: 'select',
-}
-
-const generateFullName = () => {
-  return 'Janne Jansson';
-};
-
-const generateUserName = () => {
-  return 'Janne.Jansson.0999_jannie';
-};
-
-const getMail = async (name: string) => {
-  // get domain mail from temp API
-  return `${name.split(' ').join('.')}@mail.com`;
-};
-
-const instagramSignUp = async ({ mail, name }: any) => {
-  return {
-    url: 'https://www.instagram.com/accounts/emailsignup/',
-    events: [
-      {
-        type: eventTypes.CLICK,
-        textTarget: 'Allow all cookies',
-      },
-      {
-        type: eventTypes.INPUT,
-        textTarget: 'Mobile number or email address',
-        value: mail,
-      },
-      {
-        type: eventTypes.INPUT,
-        textTarget: 'Full Name',
-        value: name,
-      },
-      {
-        type: eventTypes.CLICK,
-        textTarget: 'Refresh Suggestion',
-      },
-      {
-        type: eventTypes.INPUT,
-        textTarget: 'Password',
-        value: 'hejsan'
-      },
-      {
-        type: eventTypes.CLICK,
-        textTarget: 'Next',
-      },
-      {
-        type: eventTypes.SELECT,
-        value: 'August'
-      },
-      {
-        type: eventTypes.SELECT,
-        value: '1'
-      },
-      {
-        type: eventTypes.SELECT,
-        value: '2000'
-      },
-      {
-        type: eventTypes.CLICK,
-        textTarget: 'Next',
-      },
-    ],
-  };
-}
-
-const tempMail = {
-  url: 'https://temp-mail.org/en/',
-  events: [],
+  NAVIGATION: 'navigation',
+  EVALUATE: 'evaluate'
 }
 
 const delay = (time: number) => {
@@ -241,12 +191,7 @@ const delay = (time: number) => {
 }
 
 const start = async () => {
-  const name = generateRandomFullName();
-  const mail = await getMail(name);
-  const config = await instagramSignUp({
-    name,
-    mail
-  });
+  const config = await getConfig();
   scrape(config);
 }
 
