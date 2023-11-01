@@ -229,9 +229,8 @@ const jwMatchAccMarketing = ({
 }
 
 const matchText = [
-  'Visit jwdate org for free and improved JW singles only dating - Meet brothers and sisters looking for partner worldwide - This is a new site where single JW people can meet and mingle affordable without high costs - It is free and with powerful matching features. Join now!',
-  'Join JWDate org, the premier destination for JW singles! Meet brothers and sisters worldwide, meaningful connections for free! Our platform offers powerful matching tools and genuine profiles, ensuring an affordable and enriching dating experience. Join us today',
-  'Join Jwdate org. A new site to meet single brothers and sisters globally, free. With robust matching tools, discover your perfect match today. Embrace love without the financial burden – register for free at JWDate.org'
+  'Great cook wants to add a bit of spice to your life. Join jwdate org now for more jw singles for free and for a better dating experience',
+  'Great cook wants to add a bit of spice to your life. Join jwdate org for more jw singles for free',
 ];
 
 const gender = {
