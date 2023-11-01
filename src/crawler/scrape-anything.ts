@@ -69,7 +69,7 @@ const getSelectorByText = async (page: any, targetText: any, eventType: any, val
             continue;
           }
 
-          if (eventType === 'select') {
+          if (eventType === 'select' && element.tagName === 'SELECT') {
             const optionParents = document.querySelectorAll('select');
             for (let k = 0; k < optionParents.length; k++) {
               const selectParent: any = optionParents[k];
@@ -127,8 +127,20 @@ const scrape = async (config: any) => {
   const { browser, page } = await initBrowser(config.url);
   await page.waitForSelector('body');
 
-  for (let i = 0; i < config.events.length; i++) {
-    const event = config.events[i];
+  const res = await loopConfigEvents(config.events, page);
+  if (res?.newEvents) {
+    // await loopConfigEvents(res?.newEvents, page);
+  }
+  
+  // Close the browser
+  if (!config.browserStayOpen) {
+    await browser.close();
+  }
+}
+
+const loopConfigEvents = async (events: any, page: any) => {
+  for (let i = 0; i < events.length; i++) {
+    const event = events[i];
     const eventType = event.type;
     const value = event.value;
     const textTarget = event.textTarget;
@@ -139,15 +151,12 @@ const scrape = async (config: any) => {
     // Let's make it simple and focus on sites with no anti bot verifications.
     await identifyAndSolveCaptcha(page);
 
-    if (event.waitForNavigation) {
-        await page.waitForNavigation({waitUntil: 'networkidle2'})
-    }
-
+    console.log(`eventType: ${eventType}`);
     if (eventType === eventTypes.CLICK) {
       const selector = await getSelectorByText(page, textTarget, eventType, null);
       if (selector) {
         await click(page, selector);
-        await delay(1500); // wait extra when click
+        await delay(2000); // wait extra when click
       }
     } else if (eventType === eventTypes.INPUT) {
       const selector = await getSelectorByText(page, textTarget, eventType, null);
@@ -155,24 +164,28 @@ const scrape = async (config: any) => {
         await input(page, selector, value);
       }
     } else if (eventType === eventTypes.SELECT) {
-      console.log('eventType');
-      console.log(eventType);
-      console.log(value);
       const selector = await getSelectorByText(page, null, eventType, value);
       if (selector) {
         await select(page, selector, value);
       }
     } else if (eventType === eventTypes.NAVIGATION) {
       await page.goto(event.goto);
-      await page.waitForNavigation({waitUntil: 'networkidle2'})
+      await page.waitForSelector('body');
     } else if (eventType === eventTypes.EVALUATE) {
-      await page.evaluate(event.evaluateCallback);
+      await delay(1500);
+      const res = await page.evaluate(event.evaluateCallback);
+      console.log(res);
+      if (event.eachEvaluateResEvents) {
+        const newEvents = res.map((r: any) => ([ ...event.eachEvaluateResEvents(r) ])).flat();
+        console.log(newEvents);
+        return { newEvents };
+      }
     }
-  }
-  
-  // Close the browser
-  if (!config.browserStayOpen) {
-    await browser.close();
+    
+
+    if (event.waitForNavigationAfterEvent) {
+      await page.waitForNavigation();
+    }
   }
 }
 
