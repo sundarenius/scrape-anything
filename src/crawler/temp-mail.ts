@@ -3,4 +3,4 @@ const tempMail = () => ({
   events: [],
 })
 
-export default tempMail;
+export default tempMail as any;

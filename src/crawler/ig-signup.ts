@@ -67,4 +67,4 @@ const getConfig = async () => {
   return config;
 }
 
-export default getConfig;
+export default getConfig as any;

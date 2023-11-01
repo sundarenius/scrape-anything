@@ -1,25 +1,27 @@
-const firstNames = [
-  "Liam", "Olivia", "Noah", "Emma", "Oliver", "Ava", "Elijah", "Charlotte", "James", "Sophia",
-  "William", "Amelia", "Benjamin", "Isabella", "Lucas", "Mia", "Henry", "Luna", "Alexander", "Harper",
-  "Mason", "Evelyn", "Michael", "Ella", "Ethan", "Aria", "Logan", "Chloe", "Daniel", "Scarlett",
-  "Jackson", "Grace", "Sebastian", "Lily", "Jack", "Zoe", "Aiden", "Abigail", "Samuel", "Layla",
-  "Matthew", "Nora", "David", "Hannah", "Joseph", "Avery", "Lucas", "Addison", "Carter", "Eleanor",
-  "Ezra", "Riley", "Luke", "Sofia", "Jayden", "Aubrey", "Leo", "Ellie", "Gabriel", "Ariana",
-  "Julian", "Elizabeth", "Isaac", "Penelope", "Lincoln", "Victoria", "Anthony", "Madison", "Dylan", "Scarlett",
-  "Leo", "Grace", "Jaxon", "Nova", "Asher", "Camila", "Christopher", "Hazel", "Josiah", "Aurora",
-  "Isaiah", "Zara", "Charles", "Paisley", "Xavier", "Stella", "Joshua", "Savannah", "Jeremiah", "Maya",
-  "Nicholas", "Natalie", "Archer", "Audrey", "Adrian", "Brooklyn", "Hunter", "Leah", "Theodore", "Lucy",
-  "Santiago", "Kinsley", "Caleb", "Isabelle", "Eli", "Lillian", "Grayson", "Anna", "Jordan", "Bella",
-  "Colton", "Genesis", "Aaron", "Emilia", "Henry", "Valentina", "Mateo", "Willow", "Landon", "Isla",
-  "Miles", "Elena", "Evan", "Lyla", "Arlo", "Mya", "Jace", "Aaliyah", "Cooper", "Melanie",
-  "Justin", "Athena", "Austin", "Mackenzie", "Alex", "Amara", "Adriel", "Alexa", "Owen", "Aria",
-  "Leon", "Violet", "Zane", "Hannah", "Christian", "Zoey", "Adrian", "Madeline", "Thomas", "Maria",
-  "Chase", "Rachel", "Bryson", "Gabriella", "Juan", "Brianna", "Ayden", "Ruby", "Kevin", "Nina",
-  "Carlos", "Kennedy", "Bryan", "Daisy", "Jamie", "Lydia", "Carson", "Jade", "Jeremiah", "Brielle",
-  "Hunter", "Aubree", "Maddox", "Faith", "Miguel", "Cora", "Harrison", "Katherine", "Tristan", "Annabelle",
-  "Parker", "Elliana", "Cole", "Liliana", "Dominic", "Giselle", "Avery", "Alexandra", "Maverick", "Ivy",
-  "Ian", "Josephine", "Colin", "Lila", "Elias", "Esther", "Brian", "Nicole", "Levi", "Lucia",
-  "Ezekiel", "Valerie", "Alexis", "Megan", "Xander", "Amy", "Patrick", "Rebecca", "Kaden", "Kylie"
+
+const maleNames = [
+  "Liam", "Noah", "Oliver", "Elijah", "James", "William", "Benjamin", "Lucas", "Mason", "Michael",
+  "Alexander", "Henry", "Jackson", "Sebastian", "Aiden", "Matthew", "Samuel", "David", "Joseph", "Carter",
+  "Owen", "Wyatt", "John", "Dylan", "Luke", "Gabriel", "Daniel", "Isaac", "Anthony", "Grayson",
+  "Jack", "Julian", "Levi", "Christopher", "Joshua", "Andrew", "Lincoln", "Mateo", "Ryan", "Jaxon",
+  "Nathan", "Aaron", "Isaiah", "Thomas", "Charles", "Caleb", "Hunter", "Eli", "Connor", "Jeremiah",
+  "Nicholas", "Ezra", "Henry", "Jameson", "Julian", "Jonathan", "Evan", "Leo", "Adrian", "Gabriel",
+  "Brandon", "Tyler", "Parker", "Jordan", "Zachary", "Colton", "Charlie", "Roman", "Hudson", "Maxwell",
+  "Adam", "Austin", "Alex", "Tristan", "Joseph", "Bentley", "Ian", "Xavier", "Jose", "Landon",
+  "Asher", "Bryson", "Jace", "Miles", "Steven", "Axel", "Santiago", "Dominic", "Jason", "Josiah",
+  "Maddox", "Camden", "Chase", "Kingston", "Easton", "Kevin", "Ryder", "Jesus", "Silas", "Isaiah"
+];
+const femaleNames = [
+  "Olivia", "Emma", "Ava", "Charlotte", "Sophia", "Amelia", "Isabella", "Mia", "Luna", "Harper",
+  "Evelyn", "Abigail", "Emily", "Elizabeth", "Mila", "Ella", "Avery", "Sofia", "Camila", "Aria",
+  "Scarlett", "Victoria", "Madison", "Lily", "Chloe", "Grace", "Aubrey", "Zoey", "Hannah", "Layla",
+  "Riley", "Zoe", "Nora", "Lila", "Eleanor", "Hazel", "Violet", "Lily", "Lucy", "Stella", "Aurora",
+  "Claire", "Sophie", "Bella", "Leah", "Zara", "Ellie", "Savannah", "Emilia", "Nova", "Penelope",
+  "Madeline", "Alice", "Isla", "Rose", "Alexa", "Lucia", "Aaliyah", "Kinsley", "Maeve", "Elliana",
+  "Skylar", "Hailey", "Autumn", "Paisley", "Alyssa", "Natalie", "Brooklyn", "Brielle", "Liliana", "Ariana",
+  "Maya", "Serenity", "Scarlet", "Samantha", "Daisy", "Elena", "Vivian", "Willow", "Eva", "Quinn",
+  "Ivy", "Delilah", "Sadie", "Julia", "Emery", "Katherine", "Brianna", "Alexandra", "Sophia", "Rebecca",
+  "Callie", "Lola", "Zelda", "Adeline", "Vivienne", "Gabriella", "Clara", "Rylee", "Annabelle", "Holly"
 ];
 
 const surnames = [
@@ -45,8 +47,14 @@ const surnames = [
   "Fields", "Luna", "Harper", "Austin", "Garcia", "Reeves", "Soto", "Wade", "Fisher", "Munoz"
 ];
 
-export function generateRandomFullName() {
-  const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+export function generateRandomFullMaleName() {
+  const randomFirstName = maleNames[Math.floor(Math.random() * maleNames.length)];
+  const randomSurname = surnames[Math.floor(Math.random() * surnames.length)];
+  return randomFirstName + " " + randomSurname;
+}
+
+export function generateRandomFullFemaleName() {
+  const randomFirstName = femaleNames[Math.floor(Math.random() * femaleNames.length)];
   const randomSurname = surnames[Math.floor(Math.random() * surnames.length)];
   return randomFirstName + " " + randomSurname;
 }

@@ -145,4 +145,4 @@ const eachEvaluateResEvents = {
   ])
 }
 
-export default getConfig;
+export default getConfig as any;

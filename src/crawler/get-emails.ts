@@ -15,22 +15,22 @@ const options = (apiUrl: string) => ({
   }
 });
 
-async function getEmail(email: string) {
+export async function getEmail(email: string) {
   const md5Hash = crypto.createHash('md5').update(email).digest('hex');
   const apiUrl = `https://privatix-temp-mail-v1.p.rapidapi.com/request/mail/id/${md5Hash}`;
   try {
     const response = await axios.request(options(apiUrl));
-    console.log(response.data);
+    return response;
   } catch (error) {
     console.error(error);
   }
 }
 
-async function getDomains() {
+export async function getDomains() {
   const apiUrl = `https://privatix-temp-mail-v1.p.rapidapi.com/request/domains/`;
   try {
     const response = await axios.request(options(apiUrl));
-    console.log(response.data);
+    return response.data;
   } catch (error) {
     console.error(error);
   }
