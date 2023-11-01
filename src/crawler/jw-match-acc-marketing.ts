@@ -10,6 +10,7 @@ const jwMatchAccMarketing = ({
   name,
   getEmailCallback,
   getMailCode,
+  username,
 }: any) => {
   return {
     browserStayOpen: true,
@@ -52,7 +53,8 @@ const jwMatchAccMarketing = ({
       {
         type: eventTypes.INPUT,
         textTarget: 'E.g. DayDreamer, AgentX, etc.',
-        value: `${name.split(' ')[0]}_${Math.floor(Math.random() * 10000)}`
+        // value: `${name.split(' ')[0]}_${Math.floor(Math.random() * 10000)}`
+        value: username,
       },
       {
         type: eventTypes.INPUT,
@@ -281,6 +283,8 @@ Time: ${new Date()}
     return mailConfirmationCode;
   }
 
+  const username = `jwdate_org_${generateRandom4DigitNumber()}_join`;
+
   const configMailOne = jwMatchAccMarketing({
     mail,
     pwd,
@@ -288,9 +292,16 @@ Time: ${new Date()}
     name,
     getEmailCallback,
     getMailCode,
+    username,
   });
 
   return configMailOne;
+}
+
+function generateRandom4DigitNumber() {
+  // Generate a random number between 1000 and 9999
+  var randomNumber = Math.floor(Math.random() * 9000) + 1000;
+  return randomNumber;
 }
 
 function extractConfirmationCode(text: string) {
