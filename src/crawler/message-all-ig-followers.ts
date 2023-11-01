@@ -1,8 +1,6 @@
-import { load } from 'dotenv';
-import { generateRandomFullName } from './names';
 import { eventTypes } from './scrape-anything';
 
-const messageAllFollowersPerAccount = ({ mail, pwd }: any) => {
+const messageAllFollowersPerAccount = ({ mail, pwd, urls }: any) => {
   return {
     browserStayOpen: true,
     url: 'https://www.instagram.com/accounts/login/',
@@ -28,93 +26,11 @@ const messageAllFollowersPerAccount = ({ mail, pwd }: any) => {
       },
       {
         type: eventTypes.NAVIGATION,
-        // goto: 'https://www.instagram.com/jw_singles/followers/',
-        goto: 'https://www.instagram.com/jw_singles_int/',
+        goto: urls[0],
       },
       {
         type: eventTypes.EVALUATE,
-        evaluateCallback: async () => {
-          let newFollowed = 0;
-          const getUsers = () => Array.from(document.querySelectorAll("body > div > div > div > div > div > div > div > div > div > div > div > div._aano > div:nth-child(1) > div > div"));
-          let usersLenght = 0;
-          const loopUsers = async () => {
-            const users = getUsers();
-            usersLenght = users.length;
-            for (let i = 0; i < users.length; i++) {
-              usersLenght = i;
-              const user: any = users[i];
-              if (user.innerText.includes('Follow') && !user.innerText.includes('Following')) {
-                user.querySelector('button').click();
-                await new Promise((resolve) => { setTimeout(() => { resolve(''); }, 1500);})
-                newFollowed += 1;
-              }
-            }
-          }
-          const loadMore = async () => {
-            const contentDiv = document.querySelector("body > div > div > div > div > div > div > div > div > div > div > div > div._aano") as HTMLElement;
-            contentDiv.scrollTop = contentDiv.scrollHeight;
-
-            const users = getUsers();
-            if (users.length > (usersLenght - 5) && newFollowed < 200) {
-              await loopUsers();
-              loadMore();
-            }
-          }
-
-          await loadMore();
-        },
-        evaluateCallbackXX: async () => {
-          let urls: string[] = [];
-          const getUsersArr: any = () => Array.from(document.querySelectorAll("body > div > div > div > div > div > div > div > div > div > div > div > div._aano > div:nth-child(1) > div a"));
-          const getUsersUrls = () => {
-            const userUrls = getUsersArr().map((v: any) => v.href);
-            urls = userUrls as string[];
-            return userUrls;
-          }
-          const loadMore = async () => {
-            const contentDiv = document.querySelector("body > div > div > div > div > div > div > div > div > div > div > div > div._aano") as HTMLElement;
-            contentDiv.scrollTop = contentDiv.scrollHeight;
-          }
-          const fillUrls = async () => {
-            getUsersUrls();
-            loadMore();
-            // await new Promise((resolve) => { setTimeout(() => { resolve(''); }, 3500)});
-            // await new Promise((resolve) => { setTimeout(() => { resolve(''); }, 200)});
-            if (getUsersArr().length > urls.length) {
-              await fillUrls();
-            }
-          }
-          await fillUrls();
-          const uniqueStrings = new Set(urls);
-          return Array.from(uniqueStrings);
-        },
-        eachEvaluateResEventsXX: (url: string) => [
-          {
-            type: eventTypes.NAVIGATION,
-            goto: url,
-          },
-          {
-            type: eventTypes.CLICK,
-            textTarget: 'Follow'
-          },
-          // {
-          //   type: eventTypes.CLICK,
-          //   textTarget: 'Message'
-          // },
-          // {
-          //   type: eventTypes.CLICK,
-          //   textTarget: 'Not Now'
-          // },
-          // {
-          //   type: eventTypes.INPUT,
-          //   textTarget: 'Message...',
-          //   value: messages[Math.floor(Math.random() * messages.length)],
-          // },
-          // {
-          //   type: eventTypes.CLICK,
-          //   textTarget: 'Send',
-          // },
-        ]
+        evaluateCallback: evaluates.followFromFollowersList,
       },
     ],
   };
@@ -131,11 +47,102 @@ August`,
 ]
 
 const getConfig = async () => {
-  const config = messageAllFollowersPerAccount({
+  const configMailOne = messageAllFollowersPerAccount({
     mail: 'dejerop427@monutri.com',
-    pwd: 'hejsan'
+    pwd: 'hejsan',
+    urls: [
+      'https://www.instagram.com/jw_singles/followers/',
+      'https://www.instagram.com/jw_singles_int/followers/',
+    ]
   });
-  return config;
+  return configMailOne;
+}
+
+const evaluates = {
+  followFromFollowersList: async () => {
+    let newFollowed = 0;
+    const getUsers = () => Array.from(document.querySelectorAll("body > div > div > div > div > div > div > div > div > div > div > div > div._aano > div:nth-child(1) > div > div"));
+    let usersLenght = 0;
+    const loopUsers = async () => {
+      const users = getUsers();
+      usersLenght = users.length;
+      for (let i = 0; i < users.length; i++) {
+        usersLenght = i;
+        const user: any = users[i];
+        if (user.innerText.includes('Follow') && !user.innerText.includes('Following')) {
+          user.querySelector('button').click();
+          await new Promise((resolve) => { setTimeout(() => { resolve(''); }, 1500);})
+          newFollowed += 1;
+        }
+      }
+    }
+    const loadMore = async () => {
+      const contentDiv = document.querySelector("body > div > div > div > div > div > div > div > div > div > div > div > div._aano") as HTMLElement;
+      contentDiv.scrollTop = contentDiv.scrollHeight;
+
+      const users = getUsers();
+      if (users.length > (usersLenght - 5) && newFollowed < 200) {
+        await loopUsers();
+        loadMore();
+      }
+    }
+
+    await loadMore();
+  },
+  getProfileUrlsFromFollowerList: async () => {
+    let urls: string[] = [];
+    const getUsersArr: any = () => Array.from(document.querySelectorAll("body > div > div > div > div > div > div > div > div > div > div > div > div._aano > div:nth-child(1) > div a"));
+    const getUsersUrls = () => {
+      const userUrls = getUsersArr().map((v: any) => v.href);
+      urls = userUrls as string[];
+      return userUrls;
+    }
+    const loadMore = async () => {
+      const contentDiv = document.querySelector("body > div > div > div > div > div > div > div > div > div > div > div > div._aano") as HTMLElement;
+      contentDiv.scrollTop = contentDiv.scrollHeight;
+    }
+    const fillUrls = async () => {
+      getUsersUrls();
+      loadMore();
+      await new Promise((resolve) => { setTimeout(() => { resolve(''); }, 3500)});
+      if (getUsersArr().length > urls.length) {
+        await fillUrls();
+      }
+    }
+    await fillUrls();
+    const uniqueStrings = new Set(urls);
+    return Array.from(uniqueStrings);
+  }
+}
+
+const eachEvaluateResEvents = {
+  sendMessageToUrlList: (url: string) => ([
+    {
+      type: eventTypes.NAVIGATION,
+      goto: url,
+    },
+    {
+      type: eventTypes.CLICK,
+      textTarget: 'Follow'
+    },
+    {
+      type: eventTypes.CLICK,
+      textTarget: 'Message'
+    },
+    {
+      type: eventTypes.CLICK,
+      textTarget: 'Not Now'
+    },
+    {
+      type: eventTypes.INPUT,
+      textTarget: 'Message...',
+      value: messages[Math.floor(Math.random() * messages.length)],
+    },
+    {
+      type: eventTypes.CLICK,
+      textTarget: 'Send',
+    },
+  ])
 }
 
 export default getConfig;
