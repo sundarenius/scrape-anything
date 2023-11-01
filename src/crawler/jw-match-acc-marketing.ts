@@ -198,7 +198,7 @@ const jwMatchAccMarketing = ({
         waitBefore: 5000,
         type: eventTypes.INPUT,
         textTarget: 'headline',
-        value: 'World traveler looking for a partner to join my journey'
+        value: 'Great cook wants to add a bit of spice to your life.'
       },
       {
         type: eventTypes.INPUT,
