@@ -260,15 +260,20 @@ Time: ${new Date()}
   let mailConfirmationCode: string = '';
   const getEmailCallback = async () => {
     await new Promise((resolve) => { setTimeout(() => { resolve(''); }, 5000); });
-    const res: any = await getEmail(mail);
-    if (res.data) {
-      const find = res.data.find((r: any) => r.mail_subject.includes('One more step - please confirm your email'));
-      const code = extractConfirmationCode(find.mail_text) as string;
-      mailConfirmationCode = code;
-      console.log('code:');
-      console.log(code);
-    } else {
-      await getEmailCallback();
+    try {
+      const res: any = await getEmail(mail);
+      if (res.data) {
+        const find = res.data.find((r: any) => r.mail_subject.includes('One more step - please confirm your email'));
+        const code = extractConfirmationCode(find.mail_text) as string;
+        mailConfirmationCode = code;
+        console.log('code:');
+        console.log(code);
+      } else {
+        await getEmailCallback();
+      }
+    } catch (err) {
+      console.log(err);
+      console.log('error from getEmailCallback, trying again ...')
     }
     return null;
   };
