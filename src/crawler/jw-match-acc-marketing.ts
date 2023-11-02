@@ -13,7 +13,7 @@ const jwMatchAccMarketing = ({
   username,
 }: any) => {
   return {
-    browserStayOpen: true,
+    browserStayOpen: false,
     url: 'https://www.jwmatch.com/s/',
     events: [
       {
@@ -243,7 +243,11 @@ const getConfig = async (g: string) => {
   const domain = domains[Math.floor(Math.random() * domains.length - 1)];
   // const domain = '@mocvn.com';
   // const domain = '@steveix.com';
-  if (!domain) throw new Error('No domain');
+  if (!domain) {
+    await new Promise((resolve) => { setTimeout(() => { resolve(''); }, 5000); });
+    const newTry: any = await getConfig(g);
+    return newTry;
+  }
   
   const mail = `${name.replace(' ', '.')}${domain}`.toLowerCase();
   const pwd = 'hejsan';
@@ -282,7 +286,7 @@ Time: ${new Date()}
     return mailConfirmationCode;
   }
 
-  const username = `jwdate_org_${generateRandom4DigitNumber()}_join`;
+  const username = getUsername();
 
   const configMailOne = jwMatchAccMarketing({
     mail,
@@ -295,6 +299,17 @@ Time: ${new Date()}
   });
 
   return configMailOne;
+}
+
+function getUsername() {
+  // Generate a random number between 1000 and 9999
+  const names = [
+    `jwdate_org_${generateRandom4DigitNumber()}_join`,
+    `goto_jwdate_org_${generateRandom4DigitNumber()}`,
+    `jwdate_org_${generateRandom4DigitNumber()}_free`,
+    `join_jwdate_org_${generateRandom4DigitNumber()}`,
+  ]
+  return names[Math.floor(Math.random() * names.length)];
 }
 
 function generateRandom4DigitNumber() {
