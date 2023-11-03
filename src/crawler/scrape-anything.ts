@@ -1,6 +1,8 @@
 import puppeteer from 'puppeteer';
 import getConfig from './jw-match-acc-marketing';
-// import getConfig from './jw-match-test-login';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const initBrowser = async (url: any) => {
   const puppeteerOptions = {
@@ -11,7 +13,7 @@ const initBrowser = async (url: any) => {
     ],
     slowMo: 10,
     defaultViewport: null,
-    executablePath: '/opt/homebrew/bin/chromium',
+    executablePath: process.env.CHROMIUM_PATH,
   }
   const browser = await puppeteer.launch(puppeteerOptions);
   const page = await browser.newPage();
