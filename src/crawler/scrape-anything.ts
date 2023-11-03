@@ -4,7 +4,7 @@ import getConfig from './jw-match-acc-marketing';
 
 const initBrowser = async (url: any) => {
   const puppeteerOptions = {
-    devtools: true, // false for headless
+    devtools: false, // false for headless
     args: [
       '--disable-web-security',
       '--disable-features=IsolateOrigins,site-per-process'
