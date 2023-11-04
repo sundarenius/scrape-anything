@@ -13,7 +13,7 @@ const jwMatchAccMarketing = ({
   username,
 }: any) => {
   return {
-    browserStayOpen: false,
+    browserStayOpen: true,
     url: 'https://www.jwmatch.com/s/',
     events: [
       {
@@ -331,4 +331,5 @@ function extractConfirmationCode(text: string) {
 export default [
   () => getConfig(gender.male),
   () => getConfig(gender.female),
+  // () => getConfig(gender.male),
 ] as any;

@@ -52,4 +52,4 @@ async function getDomains() {
 
 // subject: "One more step - please confirm your email"
 // getDomains();
-getEmail('mateo.just@cevipsa.com');
+getEmail('daisy.sanchez@anypsd.com');
