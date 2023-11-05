@@ -1,12 +1,13 @@
 import puppeteer from 'puppeteer';
-import getConfig from './jw-match-acc-marketing';
+// import getConfig from './jw-match-acc-marketing';
+import getConfig from './follow-ig-from-list';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
 const initBrowser = async (url: any) => {
   const puppeteerOptions = {
-    devtools: false, // false for headless
+    devtools: true, // false for headless
     args: [
       '--disable-web-security',
       '--disable-features=IsolateOrigins,site-per-process'

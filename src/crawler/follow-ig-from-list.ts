@@ -22,11 +22,14 @@ const messageAllFollowersPerAccount = ({ mail, pwd, urls }: any) => {
       {
         type: eventTypes.CLICK,
         textTarget: 'Log in',
-        waitForNavigationAfterEvent: true,
       },
       {
         type: eventTypes.NAVIGATION,
         goto: urls[0],
+      },
+      {
+        type: eventTypes.CLICK,
+        textTarget: ' Followers',
       },
       {
         type: eventTypes.EVALUATE,
@@ -36,23 +39,14 @@ const messageAllFollowersPerAccount = ({ mail, pwd, urls }: any) => {
   };
 }
 
-const messages = [
-  `Hello! I hope this message finds you well!
-I just shortly want to recommend you a new dating for JW singles only. Brothers and sisters looking for partners in the truth.
-It is totally to free. Visit www.jwdate.org.
-Best regards //
-August`,
-  `Greetings! Wanted to share a new JW singles dating site: www.jwdate.org. It's free and exclusive to those seeking partners in the truth. Best wishes, August.`,
-  `Hi there! Quick recommendation: www.jwdate.org, a new dating site for JW singles. It's free and dedicated to helping brothers and sisters find partners in the truth. Warm regards, August.`,
-]
-
 const getConfig = async () => {
   const configMailOne = messageAllFollowersPerAccount({
-    mail: 'dejerop427@monutri.com',
+    mail: 'porile6705@mkurg.com',
     pwd: 'hejsan',
     urls: [
-      'https://www.instagram.com/jw_singles/followers/',
-      'https://www.instagram.com/jw_singles_int/followers/',
+      'https://www.instagram.com/jw_singles_meet/'
+      // 'https://www.instagram.com/jw_singles/followers/',
+      // 'https://www.instagram.com/jw_singles_int/followers/',
     ]
   });
   return configMailOne;
@@ -60,6 +54,7 @@ const getConfig = async () => {
 
 const evaluates = {
   followFromFollowersList: async () => {
+    // Can also copy paste into a console while open a followers list
     let newFollowed = 0;
     const getUsers = () => Array.from(document.querySelectorAll("body > div > div > div > div > div > div > div > div > div > div > div > div._aano > div:nth-child(1) > div > div"));
     let usersLenght = 0;
@@ -81,7 +76,7 @@ const evaluates = {
       contentDiv.scrollTop = contentDiv.scrollHeight;
 
       const users = getUsers();
-      if (users.length > (usersLenght - 5) && newFollowed < 200) {
+      if (users.length > (usersLenght - 5) && newFollowed < 40) {
         await loopUsers();
         loadMore();
       }
@@ -116,33 +111,7 @@ const evaluates = {
 }
 
 const eachEvaluateResEvents = {
-  sendMessageToUrlList: (url: string) => ([
-    {
-      type: eventTypes.NAVIGATION,
-      goto: url,
-    },
-    {
-      type: eventTypes.CLICK,
-      textTarget: 'Follow'
-    },
-    {
-      type: eventTypes.CLICK,
-      textTarget: 'Message'
-    },
-    {
-      type: eventTypes.CLICK,
-      textTarget: 'Not Now'
-    },
-    {
-      type: eventTypes.INPUT,
-      textTarget: 'Message...',
-      value: messages[Math.floor(Math.random() * messages.length)],
-    },
-    {
-      type: eventTypes.CLICK,
-      textTarget: 'Send',
-    },
-  ])
+  sendMessageToUrlList: (url: string) => ([])
 }
 
 export default getConfig as any;
