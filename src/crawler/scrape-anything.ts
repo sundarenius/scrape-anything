@@ -1,6 +1,6 @@
 import puppeteer from 'puppeteer';
-// import getConfig from './jw-match-acc-marketing';
-import getConfig from './follow-ig-from-list';
+import getConfig from './jw-match-acc-marketing';
+// import getConfig from './follow-ig-from-list';
 import dotenv from 'dotenv';
 
 dotenv.config();
